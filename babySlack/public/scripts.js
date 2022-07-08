@@ -1,4 +1,4 @@
-const socket = io('http://localhost:9000');
+const socket = io();
 let nsSocket = '';
 
 socket.on('nsList', (nsData) => {

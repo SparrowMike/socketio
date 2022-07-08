@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io('https://babyslack.herokuapp.com');
 let nsSocket = '';
 
 socket.on('nsList', (nsData) => {

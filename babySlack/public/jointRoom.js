@@ -7,14 +7,13 @@ function joinRoom(roomName) {
         messagesUl.innerHTML = '';
         history.forEach(msg => {
             const newMsg = buildHTML(msg);
-            const currentMessages = messagesUl.innerHTML;
-            messagesUl.innerHTML = currentMessages + newMsg;
+            messagesUl.innerHTML += newMsg;
         });
         messagesUl.scrollTo(0, messagesUl.scrollHeight)
     });
     nsSocket.on('updateMembers', (numMembers) => {
-        document.querySelector('.curr-room-text').innerHTML = `${roomName}`;
         document.querySelector('.curr-room-num-users').innerHTML = `${numMembers} <span class="glyphicon glyphicon-user"></span>`
+        document.querySelector('.curr-room-text').innerHTML = `${roomName}`;
     })
 
     let searchBox = document.querySelector('#search-box');

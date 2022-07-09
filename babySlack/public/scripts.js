@@ -1,4 +1,6 @@
-const socket = io('https://babyslack.herokuapp.com');
+// const username = prompt("what's your name")
+// const socket = io('http://localhost:9000', {query: {username: username}});
+const socket = io();
 let nsSocket = '';
 
 socket.on('nsList', (nsData) => {
@@ -11,7 +13,7 @@ socket.on('nsList', (nsData) => {
     Array.from(document.getElementsByClassName('namespace')).forEach(element => {
         element.addEventListener('click', (e) => {
             const nsEndpoint = element.getAttribute('ns')
-            console.log('I should go to now', nsEndpoint)
+            joinNs(nsEndpoint)
         });
     });
     joinNs('/wiki')

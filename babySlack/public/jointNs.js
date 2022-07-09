@@ -1,7 +1,11 @@
 function joinNs(endpoint) {
-    nsSocket = io(`http://localhost:9000${endpoint}`)
+    if (nsSocket) {
+        nsSocket.close();
+        document.querySelector('#user-input').removeEventListener('submit', formSubmission);
+    }
+    // nsSocket = io(`http://localhost:9000${endpoint}`)
+    nsSocket = io(endpoint)
     nsSocket.on('nsRoomLoad', (nsRooms) => {
-        console.log(nsRooms)
         let roomList = document.querySelector('.room-list');
         roomList.innerHTML = '';
         nsRooms.forEach(room => {
@@ -18,7 +22,7 @@ function joinNs(endpoint) {
         let roomNodes = document.getElementsByClassName('room');
         Array.from(roomNodes).forEach(element => {
             element.addEventListener('click', (e) => {
-                console.log('Clicked', e.target.innerText)
+                joinRoom(e.target.innerText)
             });
         });
         const topRoom = document.querySelector('.room');
@@ -28,20 +32,19 @@ function joinNs(endpoint) {
 
     nsSocket.on('messageToClients', (msg) => {
         const newMsg = buildHTML(msg)
-        console.log(msg)
         document.querySelector('#messages').innerHTML += newMsg;
     });
-
-    document.querySelector('.message-form').addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const newMessage = document.querySelector('#user-message').value;
-        console.log(newMessage)
-        if (newMessage == '') return;
-        nsSocket.emit('newMessageToServer', { text: newMessage });
-        document.querySelector('#user-message').value = '';
-    });
+    document.querySelector('.message-form').addEventListener('submit', formSubmission);
 }
+
+function formSubmission(event) {
+    event.preventDefault();
+    const newMessage = document.querySelector('#user-message').value;
+    if (newMessage == '') return;
+    nsSocket.emit('newMessageToServer', { text: newMessage });
+    document.querySelector('#user-message').value = '';
+}
+
 
 function buildHTML(msg) {
     const convertedDate = new Date(msg.time).toLocaleString();

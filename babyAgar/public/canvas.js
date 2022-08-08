@@ -10,7 +10,7 @@ function draw() {
     players.forEach(p => {
         context.beginPath();
         context.fillStyle = p.color;
-        context.arc(p.locX, p.locY, 10, 0, Math.PI * 2);
+        context.arc(p.locX, p.locY, p.radius, 0, Math.PI * 2);
         // context.arc(200, 200, 10, 0, Math.PI * 2);
         context.fill();
         context.lineWidth = 3;
@@ -49,5 +49,4 @@ canvas.addEventListener('mousemove', event => {
 
     player.xVector = xVector;
     player.yVector = yVector;
-    
 })

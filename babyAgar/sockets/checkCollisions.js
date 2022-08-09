@@ -5,7 +5,6 @@ function checkForOrbCollisions(pData, pConfig, orbs, settings) {
     return new Promise((resolve, reject) => {
         //ORB COLLISIONS
         orbs.forEach((orb, i) => {
-            // console.log("CHECK FOR COLLISIONS")
             // AABB Test(square)  - Axis-aligned bounding boxes
             if (pData.locX + pData.radius + orb.radius > orb.locX
                 && pData.locX < orb.locX + pData.radius + orb.radius

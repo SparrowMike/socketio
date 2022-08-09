@@ -21,10 +21,13 @@ socket.on('init', (data) => {
 socket.on('tock', data => {
     // console.log(data)
     players = data.players;
-    player.locX = data.playerX;
-    player.locY = data.playerY;
 })
 
 socket.on('orbSwitch', data => {
     orbs.splice(data.orbIndex, 1, data.newOrb);
+});
+
+socket.on('tickTock', data => {
+    player.locX = data.playerX;
+    player.locY = data.playerY;
 });

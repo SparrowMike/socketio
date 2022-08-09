@@ -9,15 +9,23 @@ const PlayerConfig = require('./classes/PlayerConfig');
 const orbs = [];
 const players = [];
 let settings = {
-    defaultOrbs: 5000,
+    defaultOrbs: 500,
     defaultSpeed: 6,
     defaultSize: 6,
     defaultZoom: 1.5,
-    worldWidth: 5000,
-    worldHeight: 5000
+    worldWidth: 500,
+    worldHeight: 500
 };
 
 initGame();
+
+setInterval(() => {
+    if (players.length > 0) {
+        io.to('game').emit('tock', {
+            players,
+        })
+    }
+}, 33);
 
 io.sockets.on('connect', (socket) => {
     let player = {};
@@ -33,8 +41,7 @@ io.sockets.on('connect', (socket) => {
 
         // issue a message to every socket - 30fps
         setInterval(() => {
-            io.to('game').emit('tock', {
-                players,
+            io.emit('tickTock', {
                 playerX: player.playerData.locX,
                 playerY: player.playerData.locY
             })
@@ -69,6 +76,13 @@ io.sockets.on('connect', (socket) => {
         }).catch(() => {
             // console.log('no collision')
         });
+
+        let playerDeath = checkForPlayerCollisions(player.playerData, player.playerConfig, players, player.socketId)
+        playerDeath.then(data => {
+            console.log('player collision')
+        }).catch(() => {
+
+        })
     });
 });
 

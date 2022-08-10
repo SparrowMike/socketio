@@ -72,19 +72,35 @@ io.sockets.on('connect', (socket) => {
                 orbIndex: data,
                 newOrb: orbs[data]
             }
-            io.sockets.emit('orbSwitch', orbData)
+            io.sockets.emit('updateLeaderBoard', getLeaderBoard());
+            io.sockets.emit('orbSwitch', orbData);
         }).catch(() => {
             // console.log('no collision')
         });
 
         let playerDeath = checkForPlayerCollisions(player.playerData, player.playerConfig, players, player.socketId)
         playerDeath.then(data => {
-            console.log('player collision')
+            // console.log('player collision')
+            io.sockets.emit('updateLeaderBoard', getLeaderBoard());
         }).catch(() => {
-
+            // console.log('no collision')
         })
     });
 });
+
+function getLeaderBoard() {
+    players.sort((a, b) => {
+        return b.score - a.score;
+    });
+    
+    let leadeBoard = players.map(curPlayer => {
+        return {
+            name: curPlayer.name,
+            score: curPlayer.score
+        }
+    });
+    return leadeBoard;
+}
 
 function initGame() {
     for(let i = 0; i < settings.defaultOrbs; i++) {

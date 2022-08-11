@@ -41,7 +41,7 @@ io.sockets.on('connect', (socket) => {
 
         // issue a message to every socket - 30fps
         setInterval(() => {
-            io.emit('tickTock', {
+            socket.emit('tickTock', {
                 playerX: player.playerData.locX,
                 playerY: player.playerData.locY
             })
@@ -102,13 +102,13 @@ function getLeaderBoard() {
         return b.score - a.score;
     });
     
-    let leadeBoard = players.map(curPlayer => {
+    let leaderBoard = players.map(curPlayer => {
         return {
             name: curPlayer.name,
             score: curPlayer.score
         }
     });
-    return leadeBoard;
+    return leaderBoard;
 }
 
 function initGame() {

@@ -9,12 +9,12 @@ const PlayerConfig = require('./classes/PlayerConfig');
 const orbs = [];
 const players = [];
 let settings = {
-    defaultOrbs: 500,
+    defaultOrbs: 5000,
     defaultSpeed: 6,
     defaultSize: 6,
     defaultZoom: 1.5,
-    worldWidth: 500,
-    worldHeight: 500
+    worldWidth: 5000,
+    worldHeight: 5000
 };
 
 initGame();
@@ -82,8 +82,17 @@ io.sockets.on('connect', (socket) => {
         playerDeath.then(data => {
             // console.log('player collision')
             io.sockets.emit('updateLeaderBoard', getLeaderBoard());
+            io.sockets.emit('playerDeath', data);
         }).catch(() => {
             // console.log('no collision')
+        })
+    });
+    socket.on('disconnect', data => {
+        players.forEach((currPlayer, index)=> {
+            if (currPlayer.uid == player.playerData.uid) {
+                players.splice(index, 1);
+                io.sockets.emit('updateLeaderBoard', getLeaderBoard());
+            }
         })
     });
 });

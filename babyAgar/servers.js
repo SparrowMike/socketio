@@ -7,6 +7,7 @@ const io = socketio(expressServer);
 const helmet = require('helmet');
 app.use(helmet())
 
+console.log('express server running on 8080')
 module.exports = {
     app,
     io

@@ -14,4 +14,4 @@ const cpuModel = cpus[0].model;
 
 const numCores = cpus.length;
 const cpuSpeed = cpus[0].speed;
-console.log(osType, cpuSpeed)
+console.log(osType, upTime)

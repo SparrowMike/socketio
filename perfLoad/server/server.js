@@ -33,17 +33,17 @@ if (cluster.isMaster) {
 	let workers = [];
 
 	// Helper function for spawning worker at index 'i'.
-	let spawn = function(i) {
+	let spawn = function (i) {
 		workers[i] = cluster.fork();
 
 		// Optional: Restart worker on exit
-		workers[i].on('exit', function(code, signal) {
+		workers[i].on('exit', function (code, signal) {
 			// console.log('respawning worker', i);
 			spawn(i);
 		});
-    };
+	};
 
-    // Spawn workers.
+	// Spawn workers.
 	for (var i = 0; i < num_processes; i++) {
 		spawn(i);
 	}
@@ -51,38 +51,38 @@ if (cluster.isMaster) {
 	// Helper function for getting a worker index based on IP address.
 	// This is a hot path so it should be really fast. The way it works
 	// is by converting the IP address to a number by removing non numeric
-    // characters, then compressing it to the number of slots we have.
+	// characters, then compressing it to the number of slots we have.
 	//
 	// Compared against "real" hashing (from the sticky-session code) and
 	// "real" IP number conversion, this function is on par in terms of
 	// worker index distribution only much faster.
-	const worker_index = function(ip, len) {
+	const worker_index = function (ip, len) {
 		return farmhash.fingerprint32(ip) % len; // Farmhash is the fastest and works with IPv6, too
 	};
 
 
-    // in this case, we are going to start up a tcp connection via the net
-    // module INSTEAD OF the http module. Express will use http, but we need
-    // an independent tcp port open for cluster to work. This is the port that 
-    // will face the internet
-	const server = net.createServer({ pauseOnConnect: true }, (connection) =>{
+	// in this case, we are going to start up a tcp connection via the net
+	// module INSTEAD OF the http module. Express will use http, but we need
+	// an independent tcp port open for cluster to work. This is the port that 
+	// will face the internet
+	const server = net.createServer({ pauseOnConnect: true }, (connection) => {
 		// We received a connection and need to pass it to the appropriate
 		// worker. Get the worker for this connection's source IP and pass
 		// it the connection.
 		let worker = workers[worker_index(connection.remoteAddress, num_processes)];
 		worker.send('sticky-session:connection', connection);
-    });
-    server.listen(port);
-    console.log(`Master listening on port ${port}`);
+	});
+	server.listen(port);
+	console.log(`Master listening on port ${port}`);
 } else {
-    // Note we don't use a port here because the master listens on it for us.
-    let app = express();
-    // app.use(express.static(__dirname + '/public'));
-    // app.use(helmet());
-    
+	// Note we don't use a port here because the master listens on it for us.
+	let app = express();
+	// app.use(express.static(__dirname + '/public'));
+	// app.use(helmet());
+
 	// Don't expose our internal server to the outside world.
-    const server = app.listen(0, 'localhost');
-    // console.log("Worker listening...");    
+	const server = app.listen(0, 'localhost');
+	// console.log("Worker listening...");    
 	const io = socketio(server);
 
 	// Tell Socket.IO to use the redis adapter. By default, the redis
@@ -91,15 +91,15 @@ if (cluster.isMaster) {
 	// redis-cli monitor
 	io.adapter(io_redis({ host: 'localhost', port: 6379 }));
 
-    // Here you might use Socket.IO middleware for authorization etc.
+	// Here you might use Socket.IO middleware for authorization etc.
 	// on connection, send the socket over to our module with socket stuff
-    io.on('connection', function(socket) {
-		socketMain(io,socket);
+	io.on('connection', function (socket) {
+		socketMain(io, socket);
 		console.log(`connected to worker: ${cluster.worker.id}`);
-    });
+	});
 
 	// Listen to messages sent from the master. Ignore everything else.
-	process.on('message', function(message, connection) {
+	process.on('message', function (message, connection) {
 		if (message !== 'sticky-session:connection') {
 			return;
 		}

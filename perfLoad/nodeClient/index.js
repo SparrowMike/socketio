@@ -4,6 +4,23 @@ let socket = io('http://127.0.0.1:8181');
 
 socket.on('connect', () => {
   console.log('Connected to the socket server');
+  const nI = os.networkInterfaces();
+  let macA;
+  for (let key in nI) {
+    if (!nI[key][0].internal) {
+      macA =nI[key][0].mac;
+      break;
+    }
+  }
+
+  socket.emit('clientAuth', 'magicalpass')
+
+  let perfDataInterval = setInterval(() => {
+    performanceData().then((allPerformanceData) => {
+      // console.log(allPerformanceData)
+      socket.emit('perfData', allPerformanceData)
+    })
+  }, 1000)
 })
 
 function performanceData() {
@@ -65,7 +82,3 @@ function getCpuLoad() {
 // setInterval(() => {
 //   getCpuLoad();
 // }, 1000)
-
-performanceData().then((allPerformanceData) => {
-  console.log(allPerformanceData)
-})

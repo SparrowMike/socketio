@@ -15,12 +15,21 @@ socket.on('connect', () => {
 
   socket.emit('clientAuth', 'magicalpass')
 
+  performanceData().then((allPerformanceData) => {
+    allPerformanceData.macA = macA;
+    socket.emit('initPerfData', allPerformanceData)
+  });
+  
   let perfDataInterval = setInterval(() => {
     performanceData().then((allPerformanceData) => {
       // console.log(allPerformanceData)
-      socket.emit('perfData', allPerformanceData)
+      socket.emit('perfData', allPerformanceData);
     })
-  }, 1000)
+  }, 1000);
+
+  socket.on('disconnect', () => {
+    clearInterval(perfDataInterval);
+  })
 })
 
 function performanceData() {

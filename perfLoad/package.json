@@ -1,0 +1,16 @@
+{
+  "name": "perfload",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "server": "cd server && nodemon server.js",
+    "client": "cd nodeClient && node index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^7.4.0"
+  }
+}

@@ -17,13 +17,33 @@ function socketMain(io, socket) {
     }
   });
 
-  socket.on('initPerfData', data => {
+  socket.on('initPerfData', async data => {
     macA = data.macA;
-    checkAndAdd(macA)
+    const mongooseResponse = await checkAndAdd(data);
+    console.log(mongooseResponse)
   });
 
   socket.on('perfData', data => {
     console.log(data);
+  });
+}
+
+function checkAndAdd(data) {
+  return new Promise((resolve, reject) => {
+    Machine.findOne({
+      macA: data.macA
+    }, (err, doc) => {
+      if (err) {
+        throw err;
+        reject(err);
+      } else if (doc === null) {
+        let newMachine = new Machine(data);
+        newMachine.save();
+        resolve('added');
+      } else {
+        resolve ('found');
+      }
+    })
   });
 }
 

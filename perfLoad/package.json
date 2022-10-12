@@ -5,7 +5,8 @@
   "scripts": {
     "server": "cd server && nodemon server.js",
     "client": "cd nodeClient && node index.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "react": "cd react && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run react\""
   },
   "keywords": [],
   "author": "",

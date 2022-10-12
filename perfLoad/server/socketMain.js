@@ -11,7 +11,8 @@ function socketMain(io, socket) {
     if (key === 'magicalpass') {
       socket.join('clients');
     } else if (key === 'anotherranomkey') {
-      socket.join9('ui');
+      socket.join('ui');
+      console.log('React client has joined')
     } else {
       socket.disconnect(true);
     }
@@ -24,7 +25,9 @@ function socketMain(io, socket) {
   });
 
   socket.on('perfData', data => {
-    console.log(data);
+    // console.log(data);
+    // console.log('tick...');
+    io.to('ui').emit('data', data)
   });
 }
 

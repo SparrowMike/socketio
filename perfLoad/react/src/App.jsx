@@ -4,16 +4,26 @@ import socket from './utilities/socketConnection'
 import Widget from '../components/Widget'
 
 function App() {
-  const [count, setCount] = useState(0)
   const [performanceData, setPerformanceData] = useState({})
 
   socket.on('data', data => {
-    console.log(data)
+    // const currentState = Object.assign(performanceData)
+    setPerformanceData({
+      [data.macA]: data
+    })
   })
 
+  console.log(performanceData)
+  let widgets = [];
+  const data = performanceData;
+  Object.entries(data).forEach(([key, value]) => {
+    // console.log("key", key)
+    // console.log("value", value)
+    widgets.push(<Widget key={key} data={value} />)
+  })
   return (
     <div className="App">
-      <Widget />
+      {widgets}
     </div>
   )
 }

@@ -7,13 +7,12 @@ function App() {
   const [performanceData, setPerformanceData] = useState({})
 
   socket.on('data', data => {
-    // const currentState = Object.assign(performanceData)
     setPerformanceData({
       [data.macA]: data
     })
   })
 
-  console.log(performanceData)
+  // console.log(performanceData)
   let widgets = [];
   const data = performanceData;
   Object.entries(data).forEach(([key, value]) => {

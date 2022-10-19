@@ -7,11 +7,11 @@ export default function Cpu(props) {
   drawCircle(canvas, cpu)
 
   return (
-    <div className="col-sm3 cpu">
+    <div className="col-sm-3 cpu">
       <h3>CPU load</h3>
       <div className="canvas-wrapper">
-        <canvas className="canvas"></canvas>
-        <div className="cpud-text">{cpu}</div>
+        <canvas className="canvas" width="200" height="200"></canvas>
+          <div className="cpu-text">{cpu} %</div>
       </div>
     </div>
   )

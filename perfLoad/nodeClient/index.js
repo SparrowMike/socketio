@@ -7,11 +7,16 @@ socket.on('connect', () => {
   const nI = os.networkInterfaces();
   let macA;
   for (let key in nI) {
+
+    //! FOR TESTING PURPOSES
+    macA = Math.floor(Math.ranodom() * 3) + 1;
+    break;
+
     if (!nI[key][0].internal) {
       if (nI[key][0].mac === '00:00:00:00:00:00') {
         macA = Math.random().toString(36).substring(2, 15);
       } else {
-        macA =nI[key][0].mac;
+        macA = nI[key][0].mac;
       }
       break;
     }
@@ -57,8 +62,9 @@ function performanceData() {
     
     const cpuLoad = await getCpuLoad();
     
+    const isActive = true;
     resolve({
-      freeMem, totalMem, usedMem, memUseage, osType, upTime, cpuModel, numCores, cpuSpeed, cpuLoad
+      freeMem, totalMem, usedMem, memUseage, osType, upTime, cpuModel, numCores, cpuSpeed, cpuLoad, isActive
     })
   })
 }
